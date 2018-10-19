@@ -57,11 +57,11 @@ class Application extends ServiceContainer
         }
 
         $queries = \array_merge($optional, [
-            'component_appid' => $this['config']['app_id'],
+            'component_appid' => $this['config']['client_id'],
             'redirect_uri' => $callbackUrl,
         ]);
 
-        return 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?'.http_build_query($queries);
+        return 'http://smartprogram.baidu.com/mappconsole/tp/authorization?'.http_build_query($queries);
     }
 
     /**
