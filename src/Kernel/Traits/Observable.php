@@ -46,11 +46,14 @@ trait Observable
         list($handler, $condition) = $this->resolveHandlerAndCondition($handler, $condition);
 
         if (!isset($this->handlers[$condition])) {
+            //第一次注册这个事件的时候，初始化一下
             $this->handlers[$condition] = [];
         }
         //一个事件对应N个处理程序
+        //注册事件
         array_push($this->handlers[$condition], $handler);
 
+        //返回这个东西有什么用？
         return $this->newClause($handler);
     }
 
@@ -161,13 +164,14 @@ trait Observable
     }
 
     /**
-     * 创建一个匿名函数
+     * 创建一个Clause
      * @param mixed $handler
      *
      * @return \Wise\Kernel\Clauses\Clause
      */
     protected function newClause($handler): Clause
     {
+        //将匿名函数转化成对象,经过spl_object_hash算出唯一值，存储一个Clause对象
         return $this->clauses[spl_object_hash((object)$handler)] = new Clause();
     }
 
@@ -194,6 +198,7 @@ trait Observable
     }
 
     /**
+     * 做一些验证，防止参数传错，代码不按正常套路走
      * @param $handler
      *
      * @return \Closure
@@ -204,23 +209,31 @@ trait Observable
     protected function makeClosure($handler)
     {
         if (is_callable($handler)) {
+            //是回调，参数没有传错,按正常套路走，直接返回匿名
             return $handler;
         }
 
         if (is_string($handler)) {
+            //一个包括完成命名空间的类名
             if (!class_exists($handler)) {
+                //回调类找不到，抛出异常
                 throw new InvalidArgumentException(sprintf('Class "%s" not exists.', $handler));
             }
-
+            //通过ReflectionClass 类的getInterfaceNames获取类中所有的接口方法
             if (!in_array(EventHandlerInterface::class, (new \ReflectionClass($handler))->getInterfaceNames(), true)) {
+                //判断类是否实现了EventHandlerInterface接口,
+                //路过没有实现EventHandlerInterface接口，程序无法继续往下走，抛出异常
                 throw new InvalidArgumentException(sprintf('Class "%s" not an instance of "%s".', $handler, EventHandlerInterface::class));
             }
-
+            //创建一个匿名函数，匿名函数所做的事情就是执行，处理程序
             return function ($payload) use ($handler) {
+                //动态的这个对应的类
                 return (new $handler($this->app ?? null))->handle($payload);
             };
         }
 
+        //handler不是匿名函数和类名的时候
+        //是一个类实例出来的对象,直接执行回调
         if ($handler instanceof EventHandlerInterface) {
             return function () use ($handler) {
                 return $handler->handle(...func_get_args());
@@ -231,6 +244,7 @@ trait Observable
     }
 
     /**
+     * 加工监听器，变成统一处理
      * @param $handler
      * @param $condition
      *
@@ -242,9 +256,14 @@ trait Observable
     protected function resolveHandlerAndCondition($handler, $condition): array
     {
         if (is_int($handler) || (is_string($handler) && !class_exists($handler))) {
+            //这是什么情况 ？  handler是个整形？ 或者 handler的类不存在的时候
+            //hanler和条件互换一下位置???
+            //这是什么鬼???
+            //我目前理解的代码中并没有走到这个里面来
+            //难道是为了做参数位置传错处理?
             list($handler, $condition) = [$condition, $handler];
         }
-
+        //makeClosure返回一个匿名函数
         return [$this->makeClosure($handler), $condition];
     }
 }

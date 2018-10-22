@@ -9,7 +9,7 @@
 namespace Wise\OpenPlatform\Server;
 
 use Wise\Kernel\ServerGuard;
-use EasyWeChat\OpenPlatform\Server\Handlers\VerifyTicketRefreshed;
+use Wise\OpenPlatform\Server\Handlers\VerifyTicketRefreshed;
 use Symfony\Component\HttpFoundation\Response;
 
 class Guard extends ServerGuard
@@ -21,12 +21,13 @@ class Guard extends ServerGuard
      */
     protected function resolve(): Response
     {
+        //注册一下默认要处理的事件监听器
         $this->registerHandlers();
-
+        //从协议中获取数据，这里指的是从百度的推送事件中获取数据,是解码之后的数据
         $message = $this->getMessage();
 
-        if (isset($message['InfoType'])) {
-            $this->dispatch($message['InfoType'], $message);
+        if (isset($message['MsgType'])) {
+            $this->dispatch($message['MsgType'], $message);
         }
 
         return new Response(static::SUCCESS_EMPTY_RESPONSE);

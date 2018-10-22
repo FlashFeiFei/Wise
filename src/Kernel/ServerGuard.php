@@ -151,6 +151,7 @@ class ServerGuard
         }
 
         if ($this->isSafeMode() && !empty($message['Encrypt'])) {
+            //智能小程序，目前这一步是必须到达的
             //需要对消息进行解码
             $message = $this->app['encryptor']->decrypt(
                 $message['Encrypt'],
@@ -163,9 +164,10 @@ class ServerGuard
             $dataSet = json_decode($message, true);
 
             if ($dataSet && (JSON_ERROR_NONE === json_last_error())) {
+                //可以json解析就直接返回了
                 return $dataSet;
             }
-
+            //不是json数据就把它转成xml
             $message = XML::parse($message);
         }
 
@@ -174,7 +176,7 @@ class ServerGuard
 
     /**
      * Resolve server request and return the response.
-     *
+     * 解析三方推送通知事件，并响应
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Wise\Kernel\Exceptions\BadRequestException
