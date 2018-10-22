@@ -23,6 +23,7 @@ class Application extends ServiceContainer
     protected $providers = [
         Auth\ServiceProvider::class,
         Base\ServiceProvider::class,
+        //用户接受百度定时推送过来的ticke
         Server\ServiceProvider::class,
         CodeTemplate\ServiceProvider::class,
     ];
