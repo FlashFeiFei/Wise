@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Response extends GuzzleResponse
 {
+
     /**
      * @return string
      */

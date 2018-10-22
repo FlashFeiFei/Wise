@@ -1,0 +1,190 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: liangyu
+ * Date: 2018/10/22
+ * Time: 11:59
+ */
+
+namespace Wise\Kernel\Messages;
+
+use Wise\Kernel\Contracts\MessageInterface;
+use Wise\Kernel\Support\XML;
+use Wise\Kernel\Traits\HasAttributes;
+use Mockery\Exception\BadMethodCallException;
+
+abstract class Message implements MessageInterface
+{
+    use HasAttributes;
+
+    const PUSH = 2;
+    const ALL = self::PUSH;
+
+    /**
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * @var int
+     */
+    protected $id;
+
+    /**
+     * @var string
+     */
+    protected $to;
+
+    /**
+     * @var string
+     */
+    protected $from;
+
+    /**
+     * @var array
+     */
+    protected $properties = [];
+
+    /**
+     * @var array
+     */
+    protected $jsonAliases = [];
+
+    /**
+     * Message constructor.
+     *
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        $this->setAttributes($attributes);
+    }
+
+    /**
+     * Return type name message.
+     *
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * Magic getter.
+     *
+     * @param string $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+
+        return $this->getAttribute($property);
+    }
+
+
+    /**
+     * Magic setter.
+     *
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return Message
+     */
+    public function __set($property, $value)
+    {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        } else {
+            $this->setAttribute($property, $value);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param array $appends
+     *
+     * @return array
+     */
+    public function transformForJsonRequestWithoutType(array $appends = [])
+    {
+        return $this->transformForJsonRequest($appends, false);
+    }
+
+    /**
+     * @param array $appends
+     * @param bool $withType
+     *
+     * @return array
+     */
+    public function transformForJsonRequest(array $appends = [], $withType = true): array
+    {
+        if (!$withType) {
+            return $this->propertiesToArray([], $this->jsonAliases);
+        }
+        $messageType = $this->getType();
+        $data = array_merge(['msgtype' => $messageType], $appends);
+
+        $data[$messageType] = array_merge($data[$messageType] ?? [], $this->propertiesToArray([], $this->jsonAliases));
+
+        return $data;
+    }
+
+    /**
+     * @param array $appends
+     * @param bool $returnAsArray
+     *
+     * @return string
+     */
+    public function transformToXml(array $appends = [], bool $returnAsArray = false): string
+    {
+        $data = array_merge(['MsgType' => $this->getType()], $this->toXmlArray(), $appends);
+
+        return $returnAsArray ? $data : XML::build($data);
+    }
+
+
+    /**
+     * @param array $data
+     * @param array $aliases
+     *
+     * @return array|mixed
+     *
+     * @throws \Wise\Kernel\Exceptions\InvalidArgumentException
+     */
+    protected function propertiesToArray(array $data, array $aliases = []): array
+    {
+        $this->checkRequiredAttributes();
+
+        foreach ($this->attributes as $property => $value) {
+            if (is_null($value) && !$this->isRequired($property)) {
+                continue;
+            }
+            $alias = array_search($property, $aliases, true);
+
+            $data[$alias ?: $property] = $this->get($property);
+        }
+
+        return $data;
+    }
+
+    public function toXmlArray()
+    {
+        throw new BadMethodCallException(sprintf('Class "%s" cannot support transform to XML message.', __CLASS__));
+    }
+
+}
