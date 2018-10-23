@@ -83,6 +83,7 @@ class Application extends ServiceContainer
     protected function getAuthorizerConfig(string $appId, string $refreshToken = null): array
     {
         return $this['config']->merge([
+            'app_id' => $appId,
             'refresh_token' => $refreshToken,
         ])->toArray();
     }
@@ -103,7 +104,7 @@ class Application extends ServiceContainer
         //第一个参数配置文件
         return new MiniProgram($this->getAuthorizerConfig($app_id, $refresh_token), $this->getReplaceServices($access_token) + [
                 'encryptor' => function () {
-                    //小程序的加解码组件
+                    //小程序的加解码组件,目前这个电脑关系没有做任何事情,智能小程序好像没有事件推送，所以这一步暂时还是安全的
                     return new Encryptor($this['config']['app_id'], $this['config']['token'], $this['config']['aes_key']);
                 },
 
