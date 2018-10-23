@@ -184,6 +184,7 @@ abstract class AccessToken implements AccessTokenInterface
     }
 
     /**
+     * 发送请求获取token需要的数据
      * @param array $credentials
      * @param bool $toArray
      *
@@ -220,7 +221,7 @@ abstract class AccessToken implements AccessTokenInterface
         $options = [
             ('GET' === $this->requestMethod) ? 'query' : 'json' => $credentials,
         ];
-        
+
         return $this->setHttpClient($this->app['http_client'])->request($this->getEndpoint(), $this->requestMethod, $options);
     }
 

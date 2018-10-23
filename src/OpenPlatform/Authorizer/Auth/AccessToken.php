@@ -1,0 +1,72 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: liangyu
+ * Date: 2018/10/23
+ * Time: 13:55
+ */
+
+namespace Wise\OpenPlatform\Authorizer\Auth;
+
+use Wise\Kernel\AccessToken as BaseAccessToken;
+use Wise\OpenPlatform\Application;
+use Pimple\Container;
+
+class AccessToken extends BaseAccessToken
+{
+    /**
+     * @var string
+     */
+    protected $requestMethod = 'GET';
+
+    /**
+     * @var string
+     */
+    protected $queryName = 'access_token';
+
+    /**
+     * 发送请求之后，token的字段名是什么
+     * {@inheritdoc}.
+     */
+    protected $tokenKey = 'access_token';
+
+    /**
+     * @var Application
+     */
+    protected $component;
+
+    /**
+     * AuthorizerAccessToken constructor.
+     *
+     * @param \Pimple\Container $app
+     * @param Application $component
+     */
+    public function __construct(Container $app, Application $component)
+    {
+        parent::__construct($app);
+
+        $this->component = $component;
+    }
+
+    /**
+     * 刷新token需要的数据
+     * @return array
+     */
+    protected function getCredentials(): array
+    {
+        return [
+            'grant_type' => 'app_to_tp_refresh_token',
+            'refresh_token' => $this->app['config']['refresh_token'],
+            'access_token' => $this->component['access_token']->getToken()['component_access_token']
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndpoint(): string
+    {
+        return 'rest/2.0/oauth/token';
+    }
+
+}

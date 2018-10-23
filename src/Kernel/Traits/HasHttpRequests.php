@@ -97,7 +97,7 @@ trait HasHttpRequests
     /**
      * Add a middleware.
      *
-     * @param callable    $middleware
+     * @param callable $middleware
      * @param null|string $name
      *
      * @return $this
@@ -128,14 +128,14 @@ trait HasHttpRequests
      *
      * @param string $url
      * @param string $method
-     * @param array  $options
+     * @param array $options
      *
      * @return \Psr\Http\Message\ResponseInterface|\Wise\Kernel\Support\Collection|array|object|string
      */
     public function request($url, $method = 'GET', $options = []): ResponseInterface
     {
         $method = strtoupper($method);
-
+        //添加请求中间件
         $options = array_merge(self::$defaults, $options, ['handler' => $this->getHandlerStack()]);
 
         $options = $this->fixJsonIssue($options);

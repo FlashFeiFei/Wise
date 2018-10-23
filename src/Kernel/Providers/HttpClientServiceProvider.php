@@ -29,6 +29,7 @@ class HttpClientServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $pimple)
     {
+        //注册一个guzzHttp的组件
         $pimple['http_client'] = function ($app) {
             return new Client($app['config']->get('http', []));
         };
