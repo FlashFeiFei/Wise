@@ -13,6 +13,7 @@ use Wise\OpenPlatform\Authorizer\Auth\AccessToken;
 use Wise\OpenPlatform\Authorizer\MiniProgram\Application as MiniProgram;
 use Wise\OpenPlatform\Authorizer\Server\Guard;
 use Wise\MiniProgram\Encryptor;
+use Wise\OpenPlatform\Authorizer\MiniProgram\Auth\Client;
 
 /**
  * Class Application
@@ -123,7 +124,7 @@ class Application extends ServiceContainer
     {
         $services = [
             'access_token' => $accessToken ?: function ($app) {
-                //我们三方的token
+                //授权用户的token组件
                 return new AccessToken($app, $this);
             },
 
