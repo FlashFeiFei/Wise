@@ -355,19 +355,4 @@ class ServerGuard
     {
         return false;
     }
-
-
-    /**
-     * 增加一个事件转化为权限的方法
-     * @param string $event
-     * @return int
-     * @throws RuntimeException
-     */
-    protected function msgTypeChangeInt($event)
-    {
-        if (isset(self::MESSAGE_TYPE_MAPPING[$event])) {
-            return self::MESSAGE_TYPE_MAPPING[$event];
-        }
-        throw new RuntimeException('没有事件类型相对应权限');
-    }
 }
