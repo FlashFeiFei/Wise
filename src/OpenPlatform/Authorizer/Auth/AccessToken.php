@@ -16,6 +16,7 @@ use Pimple\Container;
  * Class AccessToken
  * 类继承了BaseAccessToken,当用refresh_token去换取token的时候
  * 发送请求的是http_client这个组件,该组件默认是没有任何请求中间件的
+ * 智能小程序刷新token返回的数据格式和微信的一样，所以基类requestToken方法不需要重写
  * @package Wise\OpenPlatform\Authorizer\Auth
  */
 class AccessToken extends BaseAccessToken
