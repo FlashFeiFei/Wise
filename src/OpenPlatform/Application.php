@@ -9,6 +9,8 @@
 namespace Wise\OpenPlatform;
 
 use Wise\Kernel\ServiceContainer;
+use Wise\OpenPlatform\Authorizer\Auth\AccessToken;
+use Wise\OpenPlatform\Authorizer\MiniProgram\Application as MiniProgram;
 
 /**
  * Class Application
@@ -92,7 +94,7 @@ class Application extends ServiceContainer
      * @param string|null $refreshToken
      * @param \Wise\OpenPlatform\Authorizer\Auth\AccessToken|null $accessToken
      *
-     * @return \EasyWeChat\OpenPlatform\Authorizer\MiniProgram\Application
+     * @return \Wise\OpenPlatform\Authorizer\MiniProgram\Application
      */
     public function miniProgram(string $app_id, string $refresh_token = null, AccessToken $access_token = null): MiniProgram
     {
