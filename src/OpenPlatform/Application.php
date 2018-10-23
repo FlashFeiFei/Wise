@@ -128,6 +128,7 @@ class Application extends ServiceContainer
             },
 
             //小程序的事件监听器框架server
+            //目前智能小程序并没有向微信小程序那边有事件推送服务器，所以这个服务替换暂时还是安全的，不会影响代码
             'server' => function ($app) {
                 return new Guard($app);
             },
