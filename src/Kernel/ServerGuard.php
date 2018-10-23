@@ -11,6 +11,7 @@ namespace Wise\Kernel;
 use Wise\Kernel\Contracts\MessageInterface;
 use Wise\Kernel\Exceptions\BadRequestException;
 use Wise\Kernel\Exceptions\InvalidArgumentException;
+use Wise\Kernel\Exceptions\RuntimeException;
 use Wise\Kernel\Messages\Message;
 use Wise\Kernel\Messages\News;
 use Wise\Kernel\Messages\NewsItem;
@@ -44,10 +45,11 @@ class ServerGuard
     const SUCCESS_EMPTY_RESPONSE = 'success';
 
     /**
+     * 消息类型
      * @var array
      */
     const MESSAGE_TYPE_MAPPING = [
-        'ticket' => Message::PUSH,
+        'ticket' => Message::TICK,
     ];
 
     /**
@@ -352,5 +354,20 @@ class ServerGuard
     protected function shouldReturnRawResponse(): bool
     {
         return false;
+    }
+
+
+    /**
+     * 增加一个事件转化为权限的方法
+     * @param string $event
+     * @return int
+     * @throws RuntimeException
+     */
+    protected function msgTypeChangeInt($event)
+    {
+        if (isset(self::MESSAGE_TYPE_MAPPING[$event])) {
+            return self::MESSAGE_TYPE_MAPPING[$event];
+        }
+        throw new RuntimeException('没有事件类型相对应权限');
     }
 }

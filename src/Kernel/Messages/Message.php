@@ -17,8 +17,8 @@ abstract class Message implements MessageInterface
 {
     use HasAttributes;
 
-    const PUSH = 2;
-    const ALL = self::PUSH;
+    const TICK = 2;
+    const ALL = self::TICK;
 
     /**
      * @var string

@@ -244,7 +244,7 @@ trait Observable
     }
 
     /**
-     * 加工监听器，变成统一处理
+     * 加工监听器，变成统一处理?
      * @param $handler
      * @param $condition
      *
