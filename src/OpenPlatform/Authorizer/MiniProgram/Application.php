@@ -21,6 +21,7 @@ class Application extends MiniProgram
      */
     public function __construct(array $config = [], array $prepends = [])
     {
+        //通过构造函数，注册一些东西
         parent::__construct($config, $prepends);
 
         $providers = [
