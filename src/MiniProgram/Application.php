@@ -11,7 +11,7 @@ namespace Wise\MiniProgram;
 use Wise\BasicService;
 use Wise\Kernel\ServiceContainer;
 
-class Application
+class Application extends ServiceContainer
 {
 
 }

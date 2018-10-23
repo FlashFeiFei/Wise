@@ -11,6 +11,8 @@ namespace Wise\OpenPlatform;
 use Wise\Kernel\ServiceContainer;
 use Wise\OpenPlatform\Authorizer\Auth\AccessToken;
 use Wise\OpenPlatform\Authorizer\MiniProgram\Application as MiniProgram;
+use Wise\OpenPlatform\Authorizer\Server\Guard;
+use Wise\MiniProgram\Encryptor;
 
 /**
  * Class Application
@@ -98,8 +100,10 @@ class Application extends ServiceContainer
      */
     public function miniProgram(string $app_id, string $refresh_token = null, AccessToken $access_token = null): MiniProgram
     {
-        return new MiniProgram($this->getAuthorizerConfig($appId, $refreshToken), $this->getReplaceServices($accessToken) + [
+        //第一个参数配置文件
+        return new MiniProgram($this->getAuthorizerConfig($app_id, $refresh_token), $this->getReplaceServices($access_token) + [
                 'encryptor' => function () {
+                    //小程序的加解码组件
                     return new Encryptor($this['config']['app_id'], $this['config']['token'], $this['config']['aes_key']);
                 },
 
@@ -107,6 +111,35 @@ class Application extends ServiceContainer
                     return new Client($app, $this);
                 },
             ]);
+    }
+
+    /**
+     * @param \Wise\OpenPlatform\Authorizer\Auth\AccessToken|null $accessToken
+     *
+     * @return array
+     */
+    protected function getReplaceServices(AccessToken $accessToken = null): array
+    {
+        $services = [
+            'access_token' => $accessToken ?: function ($app) {
+                //我们三方的token
+                return new AccessToken($app, $this);
+            },
+
+            //小程序的事件监听器框架server
+            'server' => function ($app) {
+                return new Guard($app);
+            },
+        ];
+
+
+        foreach (['cache', 'http_client', 'log', 'logger', 'request'] as $reuse) {
+            if (isset($this[$reuse])) {
+                $services[$reuse] = $this[$reuse];
+            }
+        }
+
+        return $services;
     }
 
     /**
