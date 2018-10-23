@@ -63,7 +63,7 @@ class AccessToken extends BaseAccessToken
         return [
             'grant_type' => 'app_to_tp_refresh_token',
             'refresh_token' => $this->app['config']['refresh_token'],
-            'access_token' => $this->component['access_token']->getToken()['component_access_token']
+            'access_token' => $this->component['access_token']->getToken()['access_token']
         ];
     }
 
