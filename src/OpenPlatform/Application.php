@@ -123,6 +123,7 @@ class Application extends ServiceContainer
     protected function getReplaceServices(AccessToken $accessToken = null): array
     {
         $services = [
+            //会将原本我们自己三方的token替换成授权用户的token
             'access_token' => $accessToken ?: function ($app) {
                 //授权用户的token组件
                 return new AccessToken($app, $this);
