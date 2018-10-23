@@ -27,7 +27,7 @@ class Guard extends ServerGuard
         $message = $this->getMessage();
 
         if (isset($message['MsgType'])) {
-                $this->dispatch($this->msgTypeChangeInt($message['MsgType']), $message);
+            $this->dispatch($message['MsgType'], $message);
         }
 
         return new Response(static::SUCCESS_EMPTY_RESPONSE);
@@ -40,7 +40,7 @@ class Guard extends ServerGuard
     protected function registerHandlers()
     {
         //注册消息类型为ticket事件为push的监听器
-        $this->on($this->msgTypeChangeInt(self::MESAGE_TYPE_COMPONENT_VERIFY_TICKET), VerifyTicketRefreshed::class);
+        $this->on(self::MESAGE_TYPE_COMPONENT_VERIFY_TICKET, VerifyTicketRefreshed::class);
     }
 
 

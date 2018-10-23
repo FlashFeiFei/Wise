@@ -129,6 +129,7 @@ trait Observable
         foreach ($this->handlers as $condition => $handlers) {
             //一个事件对应N个应用程序的处理
             //通知事件对应的应用程序去处理
+            //呵呵，通过EasyWechat大佬的例子，我知道了字符串也能按位与
             if ('*' === $condition || ($condition & $event) === $event) {
                 foreach ($handlers as $handler) {
                     if ($clause = $this->clauses[spl_object_hash((object)$handler)] ?? null) {
