@@ -24,6 +24,7 @@ class Application extends ServiceContainer
      */
     protected $providers = [
         Auth\ServiceProvider::class,
+        //base组件
         Base\ServiceProvider::class,
         //用户接受百度定时推送过来的ticke
         Server\ServiceProvider::class,
@@ -104,5 +105,18 @@ class Application extends ServiceContainer
                     return new Client($app, $this);
                 },
             ]);
+    }
+
+    /**
+     * Handle dynamic calls.
+     *
+     * @param string $method
+     * @param array $args
+     *
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        return $this->base->$method(...$args);
     }
 }

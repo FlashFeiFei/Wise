@@ -12,6 +12,12 @@ use Wise\Kernel\AccessToken as BaseAccessToken;
 use Wise\OpenPlatform\Application;
 use Pimple\Container;
 
+/**
+ * Class AccessToken
+ * 类继承了BaseAccessToken,当用refresh_token去换取token的时候
+ * 发送请求的是http_client这个组件,该组件默认是没有任何请求中间件的
+ * @package Wise\OpenPlatform\Authorizer\Auth
+ */
 class AccessToken extends BaseAccessToken
 {
     /**

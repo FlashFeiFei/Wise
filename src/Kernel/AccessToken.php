@@ -125,7 +125,7 @@ abstract class AccessToken implements AccessTokenInterface
 
         $token = $this->requestToken($this->getCredentials(), true);
 
-        $this->setToken($token[$this->tokenKey], $token['expires_in'] ?? 7200);
+        $this->setToken($token[$this->tokenKey], $token['expires_in'] ?? 3600);
 
         return $token;
     }
@@ -173,7 +173,7 @@ abstract class AccessToken implements AccessTokenInterface
      *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function setToken(string $token, int $lifetime = 7200): AccessTokenInterface
+    public function setToken(string $token, int $lifetime = 3600): AccessTokenInterface
     {
         $this->getCache()->set($this->getCacheKey(), [
             $this->tokenKey => $token,
