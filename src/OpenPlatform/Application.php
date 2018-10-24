@@ -85,6 +85,7 @@ class Application extends ServiceContainer
     {
         return $this['config']->merge([
             'app_id' => $appId,
+            //这个refresh_token是为了用它去刷新token
             'refresh_token' => $refreshToken,
         ])->toArray();
     }
@@ -102,6 +103,7 @@ class Application extends ServiceContainer
      */
     public function miniProgram(string $app_id, string $refresh_token = null, AccessToken $access_token = null): MiniProgram
     {
+        //重新new一个ioc容器
         //第一个参数配置文件
         return new MiniProgram($this->getAuthorizerConfig($app_id, $refresh_token), $this->getReplaceServices($access_token) + [
                 'encryptor' => function () {

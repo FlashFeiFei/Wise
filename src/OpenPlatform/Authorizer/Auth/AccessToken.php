@@ -51,7 +51,7 @@ class AccessToken extends BaseAccessToken
     public function __construct(Container $app, Application $component)
     {
         parent::__construct($app);
-
+        //OpenPlatform的IOC容器
         $this->component = $component;
     }
 
@@ -64,6 +64,7 @@ class AccessToken extends BaseAccessToken
         return [
             'grant_type' => 'app_to_tp_refresh_token',
             'refresh_token' => $this->app['config']['refresh_token'],
+            //我们自己三方平台的tonken
             'access_token' => $this->component['access_token']->getToken()['access_token']
         ];
     }
