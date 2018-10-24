@@ -16,6 +16,7 @@ class ServiceProvider implements ServiceProviderInterface
 
     public function register(Container $app)
     {
+        //将二维码下载下来到本地
         $app['app_code'] = function ($app) {
             return new Client($app);
         };
