@@ -8,10 +8,12 @@
 
 namespace Wise\MiniProgram;
 
-use Wise\BasicService;
 use Wise\Kernel\ServiceContainer;
 
 class Application extends ServiceContainer
 {
-
+    protected $providers = [
+        //小程序二维码服务提供者
+        AppCode\ServiceProvider::class,
+    ];
 }
