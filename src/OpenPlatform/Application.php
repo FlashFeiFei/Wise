@@ -110,7 +110,8 @@ class Application extends ServiceContainer
                     //小程序的加解码组件,目前这个电脑关系没有做任何事情,智能小程序好像没有事件推送，所以这一步暂时还是安全的
                     return new Encryptor($this['config']['app_id'], $this['config']['token'], $this['config']['aes_key']);
                 },
-
+                //OpenPlatform下的MiniProgram下的auth
+                //TP代授权小程序登录
                 'auth' => function ($app) {
                     return new Client($app, $this);
                 },

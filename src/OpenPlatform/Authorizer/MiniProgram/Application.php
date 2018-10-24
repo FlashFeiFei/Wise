@@ -9,7 +9,6 @@
 namespace Wise\OpenPlatform\Authorizer\MiniProgram;
 
 use Wise\MiniProgram\Application as MiniProgram;
-use Wise\OpenPlatform\Authorizer\Aggregate\AggregateServiceProvider;
 
 class Application extends MiniProgram
 {
@@ -25,7 +24,8 @@ class Application extends MiniProgram
         parent::__construct($config, $prepends);
 
         $providers = [
-            AggregateServiceProvider::class,
+            //智能小程序授权代替用户上传代码等
+            Code\ServiceProvider::class,
         ];
 
         foreach ($providers as $provider) {
