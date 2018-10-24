@@ -52,4 +52,13 @@ class Client extends BaseClient
 
         return $this->httpGet('rest/2.0/oauth/getsessionkeybycode', $params);
     }
+
+    /**
+     * 自己写的方法
+     * 获取小程序基础信息
+     */
+    public function appInfo()
+    {
+        return $this->httpGet('rest/2.0/smartapp/app/info');
+    }
 }
