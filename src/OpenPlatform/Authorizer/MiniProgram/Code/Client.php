@@ -35,14 +35,45 @@ class Client extends BaseClient
 
     /**
      * 获取授权小程序预览包详情
+     * 我猜这应该是最新的一次的信息
      * 接口会返回用户小程序的package_id
      * 当前用户小程序的的状态
      * @return array|object|\Psr\Http\Message\ResponseInterface|string|\Wise\Kernel\Support\Collection
      * @throws \Wise\Kernel\Exceptions\InvalidConfigException
      */
-    public function gettrial()
+    public function packageGettrial()
     {
         return $this->httpGet('rest/2.0/smartapp/package/gettrial');
+    }
+
+    /**
+     * 获取小程序包列表
+     * @return array|object|\Psr\Http\Message\ResponseInterface|string|\Wise\Kernel\Support\Collection
+     * @throws \Wise\Kernel\Exceptions\InvalidConfigException
+     */
+    public function packageGet()
+    {
+        return $this->httpGet('rest/2.0/smartapp/package/get');
+    }
+
+    /**
+     * 获取授权小程序包详情
+     * 小程序状态，不指定package_id的情况下默认是线上版本
+     * @param int|null $type
+     * 代码包id
+     * @param string|null $package_id
+     * @return array|object|\Psr\Http\Message\ResponseInterface|string|\Wise\Kernel\Support\Collection
+     * @throws \Wise\Kernel\Exceptions\InvalidConfigException
+     */
+    public function packageGetdetail(int $type = null, string $package_id = null)
+    {
+        if (!empty($type) && !empty($package_id)) {
+            $query = [
+                'type' => $type,
+                'package_id' => $package_id
+            ];
+        }
+        return $this->httpGet('rest/2.0/smartapp/package/getdetail', $query ?? []);
     }
 
     /**
