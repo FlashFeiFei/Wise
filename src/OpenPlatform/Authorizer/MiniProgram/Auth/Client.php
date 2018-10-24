@@ -48,8 +48,6 @@ class Client extends BaseClient
         $params = [
             'code' => $code,
             'grant_type' => 'authorization_code',
-            //授权方的token
-            'access_token' => $this->component['access_token']->getToken()['access_token'],
         ];
 
         return $this->httpGet('rest/2.0/oauth/getsessionkeybycode', $params);
