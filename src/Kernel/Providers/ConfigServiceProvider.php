@@ -23,9 +23,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
      *
      * @param Container $pimple A container instance
      */
-    public function register(Container $pimple)
+    public function register(Container $app)
     {
-        $pimple['config'] = function ($app) {
+        $app['config'] = function ($app) {
             return new Config($app->getConfig());
         };
     }

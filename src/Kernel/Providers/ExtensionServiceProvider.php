@@ -27,9 +27,9 @@ class ExtensionServiceProvider implements ServiceProviderInterface
      *
      * @param Container $pimple A container instance
      */
-    public function register(Container $pimple)
+    public function register(Container $app)
     {
-        $pimple['extension'] = function ($app) {
+        $app['extension'] = function ($app) {
             return new Extension($app);
         };
     }

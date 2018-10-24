@@ -27,10 +27,10 @@ class HttpClientServiceProvider implements ServiceProviderInterface
      *
      * @param Container $pimple A container instance
      */
-    public function register(Container $pimple)
+    public function register(Container $app)
     {
         //注册一个guzzHttp的组件
-        $pimple['http_client'] = function ($app) {
+        $app['http_client'] = function ($app) {
             return new Client($app['config']->get('http', []));
         };
     }
